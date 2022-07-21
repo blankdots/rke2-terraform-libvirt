@@ -35,5 +35,6 @@ override.tf.json
 terraform.rc
 
 .vscode/*
+keys/*
 
 *.lock.hcl
