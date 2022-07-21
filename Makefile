@@ -10,4 +10,4 @@ apply:
 	./scripts/setup-6_apply.sh || (echo "Apply failed"; exit 0)
 
 destroy:
-	./scripts/setup-6_destroy.sh || (echo "Destroy failed"; exit 0)
+	./scripts/setup-7_destroy.sh || (echo "Destroy failed"; exit 0)

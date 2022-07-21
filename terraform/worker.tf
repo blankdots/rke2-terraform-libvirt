@@ -81,11 +81,10 @@ resource "libvirt_domain" "domain-kubernetes-worker" {
       host = self.network_interface.0.addresses.0
       type = "ssh"
       user = var.kubernetes_node_ssh_username
-      # we need the agent so we can get the key from it
       agent = true
     }
     inline = [
-      "cloud-init status --wait",
+      "cloud-init status --wait  > /dev/null 2>&1",
     ]
   }
 }
