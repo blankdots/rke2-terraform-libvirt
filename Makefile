@@ -1,19 +1,13 @@
-.PHONY: tf-init tf-plan tf-apply tf-destroy
+.PHONY: init plan apply destroy
 
-TF = terraform
-TFVAR = -var-file=../terraform.tfvars.json
+init:
+	./scripts/setup-0_init.sh || (echo "Init failed"; exit 0)
 
-tf-init-upgrade:
-	${TF} -chdir=./terraform init -upgrade
+plan:
+	./scripts/setup-4_plan.sh || (echo "Plan failed"; exit 0)
 
-tf-init:
-	${TF} -chdir=./terraform init
+apply:
+	./scripts/setup-6_apply.sh || (echo "Apply failed"; exit 0)
 
-tf-plan:
-	${TF} -chdir=./terraform plan ${TFVAR}
-
-tf-apply:
-	${TF} -chdir=./terraform apply ${TFVAR} -auto-approve
-
-tf-destroy:
-	${TF} -chdir=./terraform destroy ${TFVAR} -auto-approve
+destroy:
+	./scripts/setup-7_destroy.sh || (echo "Destroy failed"; exit 0)

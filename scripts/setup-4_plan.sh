@@ -1,0 +1,14 @@
+#!/bin/bash
+
+TF=terraform
+
+TFVAR="-var-file=../terraform.tfvars.json"
+
+# we generate the join_token fresh when we apply and we don't need to see it
+# this is just to run the plan
+join_token="check_on_apply"
+
+# shellcheck source=setup-5_configure-vars.sh
+source ./scripts/setup-5_configure-vars.sh
+
+"${TF}" -chdir=./terraform plan "${TFVAR}" -var="kubernetes_join_token=${join_token}" 

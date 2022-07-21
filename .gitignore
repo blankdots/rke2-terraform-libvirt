@@ -35,5 +35,9 @@ override.tf.json
 terraform.rc
 
 .vscode/*
+keys/*
+img/*
+
+k8s.yaml
 
 *.lock.hcl
