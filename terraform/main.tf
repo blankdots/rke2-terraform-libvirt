@@ -1,10 +1,10 @@
 
 terraform {
- required_version = ">= 0.13"
+  required_version = ">= 0.13"
   required_providers {
     libvirt = {
-      version = "0.6.3"
-      source = "registry.terraform.io/dmacvicar/libvirt"
+      version = "0.6.14"
+      source  = "registry.terraform.io/dmacvicar/libvirt"
     }
   }
 }
@@ -28,14 +28,14 @@ resource "libvirt_volume" "os_image_ubuntu" {
 }
 
 resource "libvirt_network" "kubernetes_network" {
-   name = "k8s_network"
-   addresses = ["10.18.3.0/24"]
-   dhcp {
-      enabled = false
-   }
-   dns {
-     enabled = true
-   }
+  name      = "k8s_net"
+  addresses = ["10.21.7.0/24"]
+  dhcp {
+    enabled = false
+  }
+  dns {
+    enabled = true
+  }
 }
 
 

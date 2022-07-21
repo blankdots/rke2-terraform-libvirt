@@ -1,7 +1,7 @@
 .PHONY: tf-init tf-plan tf-apply tf-destroy
 
 TF = terraform
-TFVAR = -var-file=../terraform.tfvars
+TFVAR = -var-file=../terraform.tfvars.json
 
 tf-init-upgrade:
 	${TF} -chdir=./terraform init -upgrade
