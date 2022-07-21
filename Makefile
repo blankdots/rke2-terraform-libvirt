@@ -4,10 +4,10 @@ init:
 	./scripts/setup-0_init.sh || (echo "Init failed"; exit 0)
 
 plan:
-	${TF} -chdir=./terraform plan ${TFVAR}
+	./scripts/setup-4_plan.sh || (echo "Plan failed"; exit 0)
 
 apply:
-	${TF} -chdir=./terraform apply ${TFVAR} -auto-approve
+	./scripts/setup-6_apply.sh || (echo "Apply failed"; exit 0)
 
 destroy:
-	${TF} -chdir=./terraform destroy ${TFVAR} -auto-approve
+	./scripts/setup-6_destroy.sh || (echo "Destroy failed"; exit 0)

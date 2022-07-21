@@ -8,7 +8,4 @@ TFVAR="-var-file=../terraform.tfvars.json"
 # this is just to run the plan
 join_token="check_on_apply"
 
-# shellcheck source=setup-5_configure-vars.sh
-source ./scripts/setup-5_configure-vars.sh
-
-"${TF}" -chdir=./terraform plan "${TFVAR}" -var="kubernetes_join_token=${join_token}" 
+"${TF}" -chdir=./terraform destroy "${TFVAR}" -var="kubernetes_join_token=${join_token}" -auto-approve

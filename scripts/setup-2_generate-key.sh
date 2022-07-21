@@ -14,7 +14,6 @@ PUBK="${KEYS_DIR}/${NAME}.pub"
 
 if [ -f "${PRIK}" ] || [ -f "${PUBK}" ]; then
 	echo "Key already exists, we are not overwriting it."
-
 else 
     echo "Generating new key ..."
     PASS=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
