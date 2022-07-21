@@ -1,10 +1,10 @@
 resource "libvirt_volume" "kubernetes-worker" {
-  count           = length(var.kubernetes_worker_ips)
-  name            = "kubernetes-client-${count.index}"
-  base_volume_id  = libvirt_volume.os_image_ubuntu.id
-  pool            = libvirt_pool.kubernetes.name
-  size            = var.kubernetes_worker_disk_size
-  format          = "qcow2"
+  count          = length(var.kubernetes_worker_ips)
+  name           = "kubernetes-client-${count.index}"
+  base_volume_id = libvirt_volume.os_image_ubuntu.id
+  pool           = libvirt_pool.kubernetes.name
+  size           = var.kubernetes_worker_disk_size
+  format         = "qcow2"
 }
 
 # for more info about paramater check this out
@@ -12,26 +12,26 @@ resource "libvirt_volume" "kubernetes-worker" {
 # Use CloudInit to add our ssh-key to the instance
 # you can add also meta_data field
 resource "libvirt_cloudinit_disk" "worker-init" {
-  count          = length(var.kubernetes_worker_ips)
-  name           = "worker-init-${count.index}.iso"
-  user_data      = data.template_file.worker_user_data[count.index].rendered
-  pool           = libvirt_pool.kubernetes.name
+  count     = length(var.kubernetes_worker_ips)
+  name      = "worker-init-${count.index}.iso"
+  user_data = data.template_file.worker_user_data[count.index].rendered
+  pool      = libvirt_pool.kubernetes.name
 }
 
 data "template_file" "worker_user_data" {
-  count = length(var.kubernetes_worker_ips)
-  template = file("${path.cwd}/templates/cloud_init_client.cfg")
+  count    = length(var.kubernetes_worker_ips)
+  template = file("${path.cwd}/templates/worker.cfg")
   vars = {
     HOSTNAME = upper(format(
       "%v-%v",
       var.kubernetes_worker_name,
       count.index
     )),
-    KUBERNETES_SERVER_JOIN_IP = element(var.kubernetes_server_ips, 0),
-    KUBERNETES_IP = "${element(var.kubernetes_worker_ips, count.index)}",
-    KUBERNETES_NODE_SSH_PASSWORD = var.kubernetes_node_ssh_password,
+    KUBERNETES_SERVER_JOIN_IP    = element(var.kubernetes_server_ips, 0),
+    KUBERNETES_IP                = "${element(var.kubernetes_worker_ips, count.index)}",
+    KUBERNETES_NODE_PUBLIC_KEY   = file(var.kubernetes_node_public_key_path),
     KUBERNETES_NODE_SSH_USERNAME = var.kubernetes_node_ssh_username,
-    KUBERNETES_JOIN_TOKEN = var.kubernetes_join_token,
+    KUBERNETES_JOIN_TOKEN        = var.kubernetes_join_token,
   }
 }
 
@@ -45,9 +45,9 @@ resource "libvirt_domain" "domain-kubernetes-worker" {
   cloudinit = libvirt_cloudinit_disk.worker-init[count.index].id
 
   network_interface {
-    network_id = libvirt_network.kubernetes_network.id
-    hostname  = "${var.kubernetes_worker_name}-${count.index}"
-    addresses = ["${element(var.kubernetes_worker_ips, count.index)}"]
+    network_id     = libvirt_network.kubernetes_network.id
+    hostname       = "${var.kubernetes_worker_name}-${count.index}"
+    addresses      = ["${element(var.kubernetes_worker_ips, count.index)}"]
     wait_for_lease = true
   }
 
@@ -78,13 +78,14 @@ resource "libvirt_domain" "domain-kubernetes-worker" {
 
   provisioner "remote-exec" {
     connection {
-      host     = "${self.network_interface.0.addresses.0}"
-      type     = "ssh"
-      user     = var.kubernetes_node_ssh_username
-      password = var.kubernetes_node_ssh_password_plain
+      host = self.network_interface.0.addresses.0
+      type = "ssh"
+      user = var.kubernetes_node_ssh_username
+      # we need the agent so we can get the key from it
+      agent = true
     }
     inline = [
-      "cloud-init status --wait > /dev/null 2>&1",
+      "cloud-init status --wait",
     ]
   }
 }
