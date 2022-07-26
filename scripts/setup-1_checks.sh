@@ -18,3 +18,5 @@ command -v jq >/dev/null 2>&1 || { echo "jq required but it's not installed. Abo
 command -v expect >/dev/null 2>&1 || { echo "expect required but it's not installed. Aborting." >&2; exit 1; }
 
 command -v sponge >/dev/null 2>&1 || { echo "sponge utility required but it's not installed. Aborting." >&2; exit 1; }
+
+command -v kubectl >/dev/null 2>&1 || { echo "kubectl utility required but it's not installed. Aborting." >&2; exit 1; }

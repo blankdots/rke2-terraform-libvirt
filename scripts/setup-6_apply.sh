@@ -32,4 +32,17 @@ if ssh-keygen -F "${master_ip}"; then
 fi
 
 # retrieve kubernetes config file
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kubernetes@"${master_ip}" cat /etc/rancher/rke2/rke2.yaml | sed "s/127.0.0.1/${master_ip}/" >k8s.yaml
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kubernetes@"${master_ip}" \
+    cat /etc/rancher/rke2/rke2.yaml | sed "s/127.0.0.1/${master_ip}/" > k8s.yaml
+
+# let us wait a bit for the nodes to be set up
+sleep 30
+
+timeout 300 bash -c \
+    "while [[ '$(curl --insecure -s -o /dev/null -w "%{http_code}\n" https://"${master_ip}":6443)' != '401' ]]; \
+    do echo 'Waiting for ${master_ip} master node' && sleep 5; done"
+
+
+echo "K8s API is available, now waiting for cluster nodes to be ready ... "
+export KUBECONFIG="${PWD}/k8s.yaml"
+kubectl wait --for=condition=Ready nodes --all --timeout=600s
