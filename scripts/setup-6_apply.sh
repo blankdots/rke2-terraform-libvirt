@@ -32,4 +32,38 @@ if ssh-keygen -F "${master_ip}"; then
 fi
 
 # retrieve kubernetes config file
-ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kubernetes@"${master_ip}" cat /etc/rancher/rke2/rke2.yaml | sed "s/127.0.0.1/${master_ip}/" >k8s.yaml
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kubernetes@"${master_ip}" \
+    cat /etc/rancher/rke2/rke2.yaml | sed "s/127.0.0.1/${master_ip}/" > k8s.yaml
+
+# let us restrict who can access this file
+chmod 600 k8s.yaml
+
+# let us wait a bit for the nodes to be set up
+sleep 30
+
+# we check against 401 HTTP response as we the default-token secret might differ
+# 401 is enough to validate the k8s API is up
+timeout 300 bash -c \
+    "while [[ '$(curl --insecure -s -o /dev/null -w '%{http_code}\n' https://"${master_ip}":6443)' != '401' ]]; \
+    do echo 'Waiting for ${master_ip} master node ...' && sleep 12; done"
+
+
+echo "K8s API is available, now waiting for cluster nodes to be ready ... "
+export KUBECONFIG="${PWD}/k8s.yaml"
+kubectl wait --for=condition=Ready nodes --all --timeout=600s
+
+echo "Adding system-upgrade controller, for automatic updates ..."
+sleep 10
+upgrade_controller_version="v0.9.1"
+kubectl apply -f \
+    "https://github.com/rancher/system-upgrade-controller/releases/download/${upgrade_controller_version}/system-upgrade-controller.yaml"
+
+echo "Adding wireguard, for in-kernel WireGuard encapsulation and encryption  ..."
+sleep 10
+
+kubectl apply -f presets/wireguard.yaml
+
+echo "=================="
+echo "run:"
+echo "export KUBECONFIG=\"\${PWD}/k8s.yaml\""
+echo "to make the k8s API available in the CLI."

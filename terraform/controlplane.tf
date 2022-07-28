@@ -12,29 +12,28 @@ resource "libvirt_volume" "kubernetes-server" {
 # Use CloudInit to add our ssh-key to the instance
 # you can add also meta_data field
 resource "libvirt_cloudinit_disk" "server-init" {
-  count     = length(var.kubernetes_server_ips)
-  name      = "server-init-${count.index}.iso"
-  user_data = data.template_file.server_user_data[count.index].rendered
-  pool      = libvirt_pool.kubernetes.name
+  count = length(var.kubernetes_server_ips)
+  name  = "server-init-${count.index}.iso"
+  pool  = libvirt_pool.kubernetes.name
+  user_data = templatefile("${path.cwd}/templates/controlplane.cfg",
+    {
+      HOSTNAME = upper(format(
+        "%v-%v",
+        var.kubernetes_server_name,
+        count.index
+      )),
+      KUBERNETES_SERVER_COUNT         = length(var.kubernetes_server_ips),
+      KUBERNETES_SERVER_JOIN_IP       = element(var.kubernetes_server_ips, 0),
+      KUBERNETES_SERVER_ENABLE_CLIENT = var.kubernetes_server_enable_client,
+      KUBERNETES_NODE_PUBLIC_KEY      = file(var.kubernetes_node_public_key_path),
+      KUBERNETES_NODE_SSH_USERNAME    = var.kubernetes_node_ssh_username,
+      KUBERNETES_JOIN_TOKEN           = var.kubernetes_join_token,
+      KUBERNETES_NODES_IPS            = join(",", var.kubernetes_worker_ips),
+      KUBERNETES_MASTER_IPS           = join(",", setsubtract(var.kubernetes_server_ips, [element(var.kubernetes_server_ips, count.index)])),
+  })
+
 }
 
-data "template_file" "server_user_data" {
-  count    = length(var.kubernetes_server_ips)
-  template = file("${path.cwd}/templates/controlplane.cfg")
-  vars = {
-    HOSTNAME = upper(format(
-      "%v-%v",
-      var.kubernetes_server_name,
-      count.index
-    )),
-    KUBERNETES_SERVER_COUNT         = length(var.kubernetes_server_ips),
-    KUBERNETES_SERVER_JOIN_IP       = element(var.kubernetes_server_ips, 0),
-    KUBERNETES_SERVER_ENABLE_CLIENT = var.kubernetes_server_enable_client,
-    KUBERNETES_NODE_PUBLIC_KEY      = file(var.kubernetes_node_public_key_path),
-    KUBERNETES_NODE_SSH_USERNAME    = var.kubernetes_node_ssh_username,
-    KUBERNETES_JOIN_TOKEN           = var.kubernetes_join_token,
-  }
-}
 
 # Create the machine
 resource "libvirt_domain" "domain-kubernetes-server" {
@@ -48,7 +47,7 @@ resource "libvirt_domain" "domain-kubernetes-server" {
   network_interface {
     network_id     = libvirt_network.kubernetes_network.id
     hostname       = "${var.kubernetes_server_name}-${count.index}"
-    addresses      = ["${element(var.kubernetes_server_ips, count.index)}"]
+    addresses      = [element(var.kubernetes_server_ips, count.index)]
     wait_for_lease = true
   }
 
@@ -80,9 +79,9 @@ resource "libvirt_domain" "domain-kubernetes-server" {
 
   provisioner "remote-exec" {
     connection {
-      host = self.network_interface.0.addresses.0
-      type = "ssh"
-      user = var.kubernetes_node_ssh_username
+      host  = self.network_interface.0.addresses.0
+      type  = "ssh"
+      user  = var.kubernetes_node_ssh_username
       agent = true
     }
     inline = [
