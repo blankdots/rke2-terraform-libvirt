@@ -41,3 +41,5 @@ img/*
 k8s.yaml
 
 *.lock.hcl
+
+terraform/.terraform.lock.hcl
