@@ -35,6 +35,9 @@ fi
 ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kubernetes@"${master_ip}" \
     cat /etc/rancher/rke2/rke2.yaml | sed "s/127.0.0.1/${master_ip}/" > k8s.yaml
 
+# let us restrict who can access this file
+chmod 600 k8s.yaml
+
 # let us wait a bit for the nodes to be set up
 sleep 30
 
@@ -49,4 +52,18 @@ echo "K8s API is available, now waiting for cluster nodes to be ready ... "
 export KUBECONFIG="${PWD}/k8s.yaml"
 kubectl wait --for=condition=Ready nodes --all --timeout=600s
 
-echo "run export KUBECONFIG=\"\${PWD}/k8s.yaml\" to make the k8s API available."
+echo "Adding system-upgrade controller, for automatic updates ..."
+sleep 10
+upgrade_controller_version="v0.9.1"
+kubectl apply -f \
+    "https://github.com/rancher/system-upgrade-controller/releases/download/${upgrade_controller_version}/system-upgrade-controller.yaml"
+
+echo "Adding wireguard, for in-kernel WireGuard encapsulation and encryption  ..."
+sleep 10
+
+kubectl apply -f presets/wireguard.yaml
+
+echo "=================="
+echo "run:"
+echo "export KUBECONFIG=\"\${PWD}/k8s.yaml\""
+echo "to make the k8s API available in the CLI."
