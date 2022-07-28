@@ -28,7 +28,7 @@ data "template_file" "worker_user_data" {
       count.index
     )),
     KUBERNETES_SERVER_JOIN_IP    = element(var.kubernetes_server_ips, 0),
-    KUBERNETES_IP                = "${element(var.kubernetes_worker_ips, count.index)}",
+    KUBERNETES_IP                = element(var.kubernetes_worker_ips, count.index),
     KUBERNETES_NODE_PUBLIC_KEY   = file(var.kubernetes_node_public_key_path),
     KUBERNETES_NODE_SSH_USERNAME = var.kubernetes_node_ssh_username,
     KUBERNETES_JOIN_TOKEN        = var.kubernetes_join_token,
@@ -47,7 +47,7 @@ resource "libvirt_domain" "domain-kubernetes-worker" {
   network_interface {
     network_id     = libvirt_network.kubernetes_network.id
     hostname       = "${var.kubernetes_worker_name}-${count.index}"
-    addresses      = ["${element(var.kubernetes_worker_ips, count.index)}"]
+    addresses      = [element(var.kubernetes_worker_ips, count.index)]
     wait_for_lease = true
   }
 

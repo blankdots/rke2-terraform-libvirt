@@ -48,7 +48,7 @@ resource "libvirt_domain" "domain-kubernetes-server" {
   network_interface {
     network_id     = libvirt_network.kubernetes_network.id
     hostname       = "${var.kubernetes_server_name}-${count.index}"
-    addresses      = ["${element(var.kubernetes_server_ips, count.index)}"]
+    addresses      = [element(var.kubernetes_server_ips, count.index)]
     wait_for_lease = true
   }
 
