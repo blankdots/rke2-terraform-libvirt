@@ -19,10 +19,10 @@ else
     PASS=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
     ssh-keygen -t ed25519 -C "k8s" -f "${KEYS_DIR}/${NAME}" -P "${PASS}"
 
-    echo "===="
+    echo "=================="
     echo "Generated Password for the key is: ${PASS}"
     echo "keep it safe it will dissappear once the shell is closed."
-    echo "===="
+    echo "=================="
 fi
 
 if  ssh-add -l | grep -q "$(ssh-keygen -lf "${PRIK}" | awk '{print $2}')"; then 

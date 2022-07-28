@@ -2,6 +2,7 @@
 
 if [ -f terraform.tfvars.json ]; then
 	echo "configuration file already exists, we are not overriding it."
+    echo "Delete the configuration and run again to generate a fresh one, or proceed with apply stage."
     exit 0
 fi 
 

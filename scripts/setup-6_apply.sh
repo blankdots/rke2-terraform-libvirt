@@ -38,11 +38,15 @@ ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no kubernetes@"${ma
 # let us wait a bit for the nodes to be set up
 sleep 30
 
+# we check against 401 HTTP response as we the default-token secret might differ
+# 401 is enough to validate the k8s API is up
 timeout 300 bash -c \
-    "while [[ '$(curl --insecure -s -o /dev/null -w "%{http_code}\n" https://"${master_ip}":6443)' != '401' ]]; \
-    do echo 'Waiting for ${master_ip} master node' && sleep 5; done"
+    "while [[ '$(curl --insecure -s -o /dev/null -w '%{http_code}\n' https://"${master_ip}":6443)' != '401' ]]; \
+    do echo 'Waiting for ${master_ip} master node ...' && sleep 12; done"
 
 
 echo "K8s API is available, now waiting for cluster nodes to be ready ... "
 export KUBECONFIG="${PWD}/k8s.yaml"
 kubectl wait --for=condition=Ready nodes --all --timeout=600s
+
+echo "run export KUBECONFIG=\"\${PWD}/k8s.yaml\" to make the k8s API available."
