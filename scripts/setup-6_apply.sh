@@ -63,6 +63,11 @@ sleep 10
 
 kubectl apply -f presets/wireguard.yaml
 
+for namespace in $(kubectl get namespaces -A -o=jsonpath="{.items[*]['metadata.name']}"); do
+  echo -n "Patching namespace $namespace - "
+  kubectl patch serviceaccount default -n "${namespace}" -p "$(cat presets/account_update.yaml)"
+done
+
 echo "=================="
 echo "run:"
 echo "export KUBECONFIG=\"\${PWD}/k8s.yaml\""
