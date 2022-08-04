@@ -31,6 +31,9 @@ resource "libvirt_cloudinit_disk" "server-init" {
       KUBERNETES_NODES_IPS            = join(",", var.kubernetes_worker_ips),
       KUBERNETES_MASTER_IPS           = join(",", setsubtract(var.kubernetes_server_ips, [element(var.kubernetes_server_ips, count.index)])),
       KUBERNETES_AUDIT_POLICY         = file("${path.cwd}/presets/audit_policy.yaml"),
+      KUBERNETES_REGISTRY_MIRROR      = var.registry_mirror,
+      KUBERNETES_REGISTRY_USER        = var.registry_mirror_user,
+      KUBERNETES_REGISTRY_PASS        = var.registry_mirror_pass,
   })
 
 }

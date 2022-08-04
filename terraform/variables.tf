@@ -77,11 +77,26 @@ variable "kubernetes_worker_vcpu" {
 }
 
 variable "kubernetes_worker_memory" {
-  description = "The number of memory to assign Nomad client"
+  description = "The number of memory to assign"
   default     = "1024"
 }
 
 variable "kubernetes_worker_disk_size" {
-  description = "The size of the disk on Nomad client"
+  description = "The size of the disk"
   default     = "6442447645" #6gb
+}
+
+variable "registry_mirror" {
+  description = "Registry Mirror address"
+  default     = ""
+}
+
+variable "registry_mirror_user" {
+  description = "Registry Mirror username"
+  default     = ""
+}
+
+variable "registry_mirror_pass" {
+  description = "Registry Mirror password"
+  default     = ""
 }

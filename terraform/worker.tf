@@ -29,6 +29,9 @@ resource "libvirt_cloudinit_disk" "worker-init" {
       KUBERNETES_JOIN_TOKEN        = var.kubernetes_join_token,
       KUBERNETES_NODES_IPS         = join(",", setsubtract(var.kubernetes_worker_ips, [element(var.kubernetes_worker_ips, count.index)])),
       KUBERNETES_MASTER_IPS        = join(",", var.kubernetes_server_ips),
+      KUBERNETES_REGISTRY_MIRROR   = var.registry_mirror,
+      KUBERNETES_REGISTRY_USER     = var.registry_mirror_user,
+      KUBERNETES_REGISTRY_PASS     = var.registry_mirror_pass,
   })
 
 }
