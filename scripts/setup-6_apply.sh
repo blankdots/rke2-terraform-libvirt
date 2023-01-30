@@ -9,15 +9,15 @@ if [ ! -f terraform.tfvars.json ]; then
     exit 1
 fi
 
-ubuntu_img=https://cloud-images.ubuntu.com/releases/releases/20.04/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img
+ubuntu_img=https://cloud-images.ubuntu.com/releases/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64-disk-kvm.img
 
 IMG_DIR="${PWD}/img"
 if [ ! -d "${IMG_DIR}" ]; then
     mkdir "${IMG_DIR}"
 fi
 
-if [ ! -f "${IMG_DIR}/ubuntu-20.04-server.kvm.img" ]; then
-    wget --no-check-certificate -O "${IMG_DIR}/ubuntu-20.04-server.kvm.img" "${ubuntu_img}"
+if [ ! -f "${IMG_DIR}/ubuntu-22.04-server.kvm.img" ]; then
+    wget --no-check-certificate -O "${IMG_DIR}/ubuntu-22.04-server.kvm.img" "${ubuntu_img}"
 fi
 
 # we generate the join_token fresh and we don't need to see it

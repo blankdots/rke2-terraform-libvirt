@@ -2,7 +2,7 @@
 
 variable "os_image" {
   description = "Define the source to the os image used by Kubernetes"
-  default     = "https://cloud-images.ubuntu.com/releases/releases/20.04/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
+  default     = "https://cloud-images.ubuntu.com/releases/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64-disk-kvm.img"
 }
 
 variable "kubernetes_pool_path" {

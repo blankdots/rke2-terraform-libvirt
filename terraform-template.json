@@ -9,8 +9,7 @@
     "kubernetes_server_memory": 2048,
     "kubernetes_server_disk_size": "16106127360",
     "kubernetes_worker_ips": [
-        "10.21.7.20",
-        "10.21.7.21"
+        "10.21.7.20"
     ],
     "kubernetes_worker_vcpu": 4,
     "kubernetes_worker_memory": 4096,
