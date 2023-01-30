@@ -1,7 +1,7 @@
 #!/bin/bash
 
 verTerraform="$(terraform version 2>&1 | awk 'NR==1' | awk '{print $2}')"
-versionNeeded="v1.2.6"
+versionNeeded="v1.3.7"
 
 command -v terraform >/dev/null 2>&1 || { echo "terraform required but it's not installed. Aborting." >&2; exit 1; }
 

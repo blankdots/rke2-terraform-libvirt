@@ -16,7 +16,7 @@ else
 
     jq \
         --arg kubernetes_node_public_key_path "${PUBK}" \
-        --arg os_image "${PWD}/img/ubuntu-20.04-server.kvm.img" \
+        --arg os_image "${PWD}/img/ubuntu-22.04-server.kvm.img" \
         '. |= . + {
             "os_image": $os_image,
             "kubernetes_node_public_key_path": $kubernetes_node_public_key_path

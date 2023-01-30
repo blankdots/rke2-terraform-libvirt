@@ -83,7 +83,7 @@ resource "libvirt_domain" "domain-kubernetes-server" {
 
   provisioner "remote-exec" {
     connection {
-      host  = self.network_interface.0.addresses.0
+      host  = self.network_interface[0].addresses[0]
       type  = "ssh"
       user  = var.kubernetes_node_ssh_username
       agent = true
