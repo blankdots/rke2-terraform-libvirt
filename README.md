@@ -1,4 +1,4 @@
-# rke2-terraform
+# rke2-terraform-libvirt
 
 [![Lint](https://github.com/blankdots/rke2-terraform/actions/workflows/tflint.yml/badge.svg)](https://github.com/blankdots/rke2-terraform/actions/workflows/tflint.yml)
 [![Scripts linter](https://github.com/blankdots/rke2-terraform/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/blankdots/rke2-terraform/actions/workflows/shellcheck.yml)
@@ -59,4 +59,4 @@ make destroy
 
 MIT License
 
-Code forked from https://github.com/hoeghh/rke2-terraform/ which is licensed under MIT License
+Code adapted from from https://github.com/hoeghh/rke2-terraform/ which is licensed under MIT License
