@@ -1,8 +1,8 @@
 # rke2-terraform-libvirt
 
-[![Lint](https://github.com/blankdots/rke2-terraform/actions/workflows/tflint.yml/badge.svg)](https://github.com/blankdots/rke2-terraform/actions/workflows/tflint.yml)
-[![Scripts linter](https://github.com/blankdots/rke2-terraform/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/blankdots/rke2-terraform/actions/workflows/shellcheck.yml)
-[![tfsec](https://github.com/blankdots/rke2-terraform/actions/workflows/tfsec.yml/badge.svg)](https://github.com/blankdots/rke2-terraform/actions/workflows/tfsec.yml)
+[![Lint](https://github.com/blankdots/rke2-terraform-libvirt/actions/workflows/tflint.yml/badge.svg)](https://github.com/blankdots/rke2-terraform-libvirt/actions/workflows/tflint.yml)
+[![Scripts linter](https://github.com/blankdots/rke2-terraform-libvirt/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/blankdots/rke2-terraform-libvirt/actions/workflows/shellcheck.yml)
+[![tfsec](https://github.com/blankdots/rke2-terraform-libvirt/actions/workflows/tfsec.yml/badge.svg)](https://github.com/blankdots/rke2-terraform-libvirt/actions/workflows/tfsec.yml)
 
 A repository that creates a RKE2 kubernetes cluster using Terraform.
 
