@@ -54,7 +54,7 @@ kubectl wait --for=condition=Ready nodes --all --timeout=600s
 
 echo "Adding system-upgrade controller, for automatic updates ..."
 sleep 10
-upgrade_controller_version="v0.9.1"
+upgrade_controller_version="v0.11.0"
 kubectl apply -f \
     "https://github.com/rancher/system-upgrade-controller/releases/download/${upgrade_controller_version}/system-upgrade-controller.yaml"
 
