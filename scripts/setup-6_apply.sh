@@ -61,7 +61,11 @@ kubectl apply -f \
 echo "Adding wireguard, for in-kernel WireGuard encapsulation and encryption  ..."
 sleep 10
 
+kubectl apply -f presets/rke2-canal-config.yaml
+
 kubectl apply -f presets/wireguard.yaml
+
+kubectl rollout restart ds rke2-canal -n kube-system
 
 for namespace in $(kubectl get namespaces -A -o=jsonpath="{.items[*]['metadata.name']}"); do
   echo -n "Patching namespace $namespace - "
