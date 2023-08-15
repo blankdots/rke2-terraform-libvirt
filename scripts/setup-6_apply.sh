@@ -61,8 +61,6 @@ kubectl apply -f \
 echo "Adding wireguard, for in-kernel WireGuard encapsulation and encryption  ..."
 sleep 10
 
-kubectl apply -f presets/rke2-canal-config.yaml
-
 kubectl apply -f presets/wireguard.yaml
 
 kubectl apply -f presets/dns_cache.yaml
