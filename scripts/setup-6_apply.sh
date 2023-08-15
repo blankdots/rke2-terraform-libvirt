@@ -65,6 +65,8 @@ kubectl apply -f presets/rke2-canal-config.yaml
 
 kubectl apply -f presets/wireguard.yaml
 
+kubectl apply -f presets/dns_cache.yaml
+
 kubectl rollout restart ds rke2-canal -n kube-system
 
 for namespace in $(kubectl get namespaces -A -o=jsonpath="{.items[*]['metadata.name']}"); do
