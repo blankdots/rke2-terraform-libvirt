@@ -3,7 +3,7 @@ terraform {
   required_version = ">= 0.13"
   required_providers {
     libvirt = {
-      version = "0.7.4"
+      version = "0.7.6"
       source  = "registry.terraform.io/dmacvicar/libvirt"
     }
   }
